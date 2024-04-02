@@ -38,7 +38,7 @@ else()
     )
     target_include_directories(xigen PRIVATE ${CMAKE_SOURCE_DIR}/src/compat)
 
-    # Generate pafser and scanner by direct invoking flex and bison
+    # Generate parser and scanner by direct invoking flex and bison
     set_source_files_properties(${CMAKE_SOURCE_DIR}/src/parser.cc ${CMAKE_SOURCE_DIR}/src/scanner.cc
                                 PROPERTIES GENERATED TRUE)
     add_custom_command(TARGET xigen PRE_BUILD

@@ -8,6 +8,20 @@
 #include <getopt.h>
 
 
+// Version macro are expected to be defined by cmake
+// ifndefs are intended to allow you build the project
+// in Visual Stduio and use debugger
+#ifndef XIGEN_VERSION_MAJOR
+#define XIGEN_VERSION_MAJOR	-1
+#endif
+#ifndef XIGEN_VERSION_MINOR
+#define XIGEN_VERSION_MINOR	-1
+#endif
+#ifndef XIGEN_VERSION_PATCH
+#define XIGEN_VERSION_PATCH	-1
+#endif
+
+
 int main(int argc, char *argv[])
 {
 	xigen::ParserContext context;
@@ -35,6 +49,7 @@ int main(int argc, char *argv[])
 		" -t, --template         template file\n"\
 		" -l, --language         language\n"\
 		" -x, --ximc-version     file with ximc version\n"\
+		" -V, --version          xigen version"
 		"\n"\
 		"One of the following modes must be specified:\n"\
 		" --check-syntax              check syntax only (default)\n"\
@@ -75,6 +90,7 @@ int main(int argc, char *argv[])
 		{"template",								optional_argument,	0,	't'},
 		{"ximc-version",						required_argument,	0,	'x'},
 		{"language",								required_argument,	0,	'l'},
+		{ "version", no_argument , 0, 'V'},
 		{"check-syntax",						no_argument,				(int*)&generatorType,	xigen::genNone},
 		{"gen-header",							no_argument,				(int*)&generatorType,	xigen::genHeader},
 		{"gen-internal-header",			no_argument,				(int*)&generatorType,	xigen::genInternalHeader},
@@ -91,13 +107,13 @@ int main(int argc, char *argv[])
 		{"gen-qsdefine",						no_argument,				(int*)&generatorType,	xigen::genQsdefine},
 		{"gen-qtscript-toscript",		no_argument,				(int*)&generatorType,	xigen::genQtscriptToscript},
 		{"gen-qtscript-fromscript",	no_argument,				(int*)&generatorType,	xigen::genQtscriptFromscript},
-		{ "gen-qtscript-toscript-calb", no_argument, (int*)&generatorType, xigen::genQtscriptToscriptCalb },
-		{ "gen-qtscript-fromscript-calb", no_argument, (int*)&generatorType, xigen::genQtscriptFromscriptCalb },
-		{ "gen-qtscript-getsetfunc", no_argument, (int*)&generatorType, xigen::genQtscriptGetsetfunc },
-		{ "gen-qtscript-getsethead", no_argument, (int*)&generatorType, xigen::genQtscriptGetsethead },
-		{ "gen-qtscript-registermt", no_argument, (int*)&generatorType, xigen::genQtscriptRegistermt },
-		{ "gen-qtscript-highlights", no_argument, (int*)&generatorType, xigen::genQtscriptHighlights },
-		{ "gen-qtscript-comparison", no_argument, (int*)&generatorType, xigen::genQtscriptComparison },
+		{"gen-qtscript-toscript-calb", no_argument, (int*)&generatorType, xigen::genQtscriptToscriptCalb },
+		{"gen-qtscript-fromscript-calb", no_argument, (int*)&generatorType, xigen::genQtscriptFromscriptCalb },
+		{"gen-qtscript-getsetfunc", no_argument, (int*)&generatorType, xigen::genQtscriptGetsetfunc },
+		{"gen-qtscript-getsethead", no_argument, (int*)&generatorType, xigen::genQtscriptGetsethead },
+		{"gen-qtscript-registermt", no_argument, (int*)&generatorType, xigen::genQtscriptRegistermt },
+		{"gen-qtscript-highlights", no_argument, (int*)&generatorType, xigen::genQtscriptHighlights },
+		{"gen-qtscript-comparison", no_argument, (int*)&generatorType, xigen::genQtscriptComparison },
 		{ 0, 0, 0, 0 }
 	};
 
@@ -112,7 +128,7 @@ int main(int argc, char *argv[])
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
 
-		int c = getopt_long (argc, argv, "hpsacvwni:o:t:x:l:",	long_options, &option_index);
+		int c = getopt_long (argc, argv, "hpsacvwnVi:o:t:x:l:",	long_options, &option_index);
 
 		/* Detect the end of the options. */
 		if (c == -1)
@@ -171,6 +187,10 @@ int main(int argc, char *argv[])
 			case 'x':
 				versionFile = optarg;
 				break;
+
+			case 'V':
+				std::cout << XIGEN_VERSION_MAJOR << "." << XIGEN_VERSION_MINOR << "." << XIGEN_VERSION_PATCH << std::endl;
+				return 0;
 
 			case 'l':
 				if (!strcmp( optarg, "russian" ))
