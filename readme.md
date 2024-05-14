@@ -47,3 +47,12 @@ cmake --build .
 ```
 
 xigen executable will be generated in `src` directory.
+
+## Releases
+
+To make a release:
+
+* Switch to the `main` branch.
+* Check all changes are committed and everything is working properly.
+* Attach tag `vX.X.X` to the current commit.
+* Update `XIGEN_VERSION` constants in `CMakeLists.txt`, commit and push this update.
