@@ -18,12 +18,16 @@ namespace xigen
 				Comment::DoxyType doxyType = m_mode == modeGenStructCalb ? Comment::doxyStructCalb : Comment::doxyStruct;
 
 				/* Add references to getter/setter functions to the struct doxycomment */
-				std::string names = " @see ";
-				names += m_current->functionName();
-				if (m_current->paired && m_current->pairedCommand->functionName() != m_current->functionName())
-					names += ", " + m_current->pairedCommand->functionName();
+				std::string names = "";
+				if (m_current->is("public"))
+				{
+					names = " @see ";
+					names += m_current->functionName();
+					if (m_current->paired && m_current->pairedCommand->functionName() != m_current->functionName())
+						names += ", " + m_current->pairedCommand->functionName();
+				}
 
-				if (m_enableComments && m_current->doxyComments.find( doxyType ) != m_current->doxyComments.end())
+				if (m_enableComments && m_current->doxyComments.find(doxyType) != m_current->doxyComments.end())
 					stream() << helpers::addEdgeDoxygenString(m_current->doxyComments[doxyType], "", names) << "\n";
 
 				stream() << "\ttypedef struct\n\t{\n";
@@ -74,10 +78,13 @@ namespace xigen
 					{
 						if (!m_refs.empty())
 							m_refs += ", ";
-						m_refs += m_current->structName() + "_t::" + field.name();
-						m_refs += ", " + m_current->functionName();
-						if (m_current->paired && m_current->functionName() != m_current->pairedCommand->functionName())
-							m_refs += ", " + m_current->pairedCommand->functionName();
+						if (m_current->is("public"))
+						{
+							m_refs += m_current->structName() + "_t::" + field.name();
+							m_refs += ", " + m_current->functionName();
+							if (m_current->paired && m_current->functionName() != m_current->pairedCommand->functionName())
+								m_refs += ", " + m_current->pairedCommand->functionName();
+						}
 					}
 				}
 				std::string refs() { return m_refs; }
